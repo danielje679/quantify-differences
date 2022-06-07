@@ -5,8 +5,6 @@ import argparse
 import SimpleITK as sitk
 import os
 
-# TODO reform functions with paths
-
 
 def voxel_spacing(x_sitk):
     """Voxel spacing
@@ -45,11 +43,14 @@ def connected_components(y, connectivity=2):
     labeled_image, nr_components = label(y, return_num=True, connectivity=1)
     return labeled_image, nr_components
 
+
 def main():
     # ARGUMENT PARSING
     parser = argparse.ArgumentParser(description='Retrieve statistics about the dataset')
 
     parser.add_argument('-p', '--path', type=str, help='path to the data', required=True)
+
+    # TODO these arguments are currently not implemented
     parser.add_argument('-v', '--voxel_spacing', type=bool, help='voxel spacing of the image')
     parser.add_argument('-r', '--resolution', type=bool, help='Image resolution of the image')
     parser.add_argument('-cc', '--conn_comp', type=bool, help='Connected components of the label map')
@@ -60,15 +61,20 @@ def main():
     label_path = args.path + "/labelsTr"
 
     # iterate over files and labels
+    ctr = 1
     for filename in zip(os.listdir(image_path), os.listdir(label_path)):
-        image_file = os.path.join(image_path, filename[0])
-        label_file = os.path.join(label_path, filename[1])
+        if filename[0].endswith(".nii.gz"):
+            print('\nVolume ', ctr)
+            ctr += 1
 
-        sitk_img = sitk.ReadImage(image_file)
-        sitk_labels = sitk.ReadImage(label_file)
-        labels = sitk.GetArrayFromImage(sitk_labels)
+            image_file = os.path.join(image_path, filename[0])
+            label_file = os.path.join(label_path, filename[1])
 
-        print('Voxel Spacing: ', voxel_spacing(sitk_img), '\nResolution: ', resolution(sitk_img), '\nConnected Components: ', connected_components(labels))
+            sitk_img = sitk.ReadImage(image_file)
+            sitk_labels = sitk.ReadImage(label_file)
+            labels = sitk.GetArrayFromImage(sitk_labels)
+
+            print('Voxel Spacing: ', voxel_spacing(sitk_img), '\nResolution: ', resolution(sitk_img), '\nConnected Components: ', connected_components(labels)[1])
 
 
 if __name__ == '__main__':
