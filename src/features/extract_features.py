@@ -62,9 +62,12 @@ def main():
 
     # iterate over files and labels
     ctr = 1
+    voxel_spacing_list = []
+    resolution_list = []
+    connected_components_list = []
     for filename in zip(os.listdir(image_path), os.listdir(label_path)):
         if filename[0].endswith(".nii.gz"):
-            print('\nVolume ', ctr)
+            print('Volume ', ctr)
             ctr += 1
 
             image_file = os.path.join(image_path, filename[0])
@@ -74,7 +77,16 @@ def main():
             sitk_labels = sitk.ReadImage(label_file)
             labels = sitk.GetArrayFromImage(sitk_labels)
 
-            print('Voxel Spacing: ', voxel_spacing(sitk_img), '\nResolution: ', resolution(sitk_img), '\nConnected Components: ', connected_components(labels)[1])
+            voxel_spacing_list.append(voxel_spacing(sitk_img))
+            resolution_list.append(resolution(sitk_img))
+            connected_components_list.append(connected_components(labels)[1])
+
+    voxel_spacing_mean, voxel_spacing_std = np.mean(voxel_spacing_list, axis=0), np.std(voxel_spacing_list, axis=0)
+    resolution_mean, resolution_std = np.mean(resolution_list, axis=0), np.std(resolution_list, axis=0)
+    connected_components_mean, connected_components_std = np.mean(connected_components_list), np.std(connected_components_list)
+    print("Voxel Spacing - mean: ", voxel_spacing_mean, " - std: ", voxel_spacing_std)
+    print("Resolution - mean: ", resolution_mean, " - std: ", resolution_std)
+    print("Number of Connected Components - mean: ", connected_components_mean, " - std: ", connected_components_std)
 
 
 if __name__ == '__main__':
