@@ -1,13 +1,18 @@
-# Generate the dataset /data/covid19/01_radiopedia in medicaldecathlon format
-# TODO documentation
+# Generate the dataset /data/covid19/01_covid19ct_zenodo in medical decathlon format
 
 import argparse
 import os
 import pathlib
 import json
+import inspect
 
 
 def move_files(source_path, destination_path, only_nifti_files=True):
+    """Moves files from one directory to another.
+    :param source_path: source directory from which to move files
+    :param destination_path: destination directory to move the files
+    :param only_nifti_files: (default=True) if only .nii.gz files should be moved
+    """
     for filename in os.listdir(source_path):
         if only_nifti_files and not filename.endswith(".nii.gz"):
             continue
@@ -19,6 +24,10 @@ def move_files(source_path, destination_path, only_nifti_files=True):
 
 
 def create_json(destination):
+    """
+    Creates the json file for the medical decathlon directory
+    :param destination: directory of the medical decathlon dir
+    """
 
     json_file = os.path.join(destination, "dataset.json")
 
@@ -45,9 +54,9 @@ def create_json(destination):
             })
 
     data = {
-        "name": "Radiopaedia",
+        "name": "Covid-19 CT Zenodo",
         "description": "Segmentation of left and right lung and infections",
-        "reference": "Radiopaedia.org",
+        "reference": "Coronavirus Disease Research Community - Zenodo",
         "licence": "Creative Commons Attribution 4.0 International",
         "release": "1.0 20/04/2020",
         "modality": {
@@ -70,11 +79,15 @@ def create_json(destination):
 
 
 def create_medical_decathlon_structure(image_path, label_path):
-    cwd = os.getcwd()
-    root = pathlib.PurePath(cwd).parents[3]
+    """
+    :param image_path: path of the downloaded image files from zenodo
+    :param label_path: path of the downloaded labels from zenodo
+    """
+    cwd = os.path.abspath(inspect.getsourcefile(lambda: 0))
+    root = pathlib.PurePath(cwd).parents[4]
 
     # destination paths
-    relative_destination = "data/01_radiopaedia"
+    relative_destination = "data/01_covid19ct_zenodo"
     images_tr_dir = os.path.join(root, relative_destination, "imagesTr")
     images_ts_dir = os.path.join(root, relative_destination, "imagesTs")
     labels_tr_dir = os.path.join(root, relative_destination, "labelsTr")
