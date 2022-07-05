@@ -5,22 +5,7 @@ import os
 import pathlib
 import json
 import inspect
-
-
-def move_files(source_path, destination_path, only_nifti_files=True):
-    """Moves files from one directory to another.
-    :param source_path: source directory from which to move files
-    :param destination_path: destination directory to move the files
-    :param only_nifti_files: (default=True) if only .nii.gz files should be moved
-    """
-    for filename in os.listdir(source_path):
-        if only_nifti_files and not filename.endswith(".nii.gz"):
-            continue
-
-        source_file = os.path.join(source_path, filename)
-        destination_file = os.path.join(destination_path, filename)
-
-        os.replace(source_file, destination_file)
+import data as utils
 
 
 def create_json(destination):
@@ -98,8 +83,8 @@ def create_medical_decathlon_structure(image_path, label_path):
     os.makedirs(labels_tr_dir)
 
     # move the files to the new destination
-    move_files(image_path, images_tr_dir)
-    move_files(label_path, labels_tr_dir)
+    utils.move_files(image_path, images_tr_dir)
+    utils.move_files(label_path, labels_tr_dir)
 
     # create the dataset.json file
     create_json(os.path.join(root, relative_destination))
