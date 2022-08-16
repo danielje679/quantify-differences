@@ -28,6 +28,7 @@ There is one ``dataset.json`` file with some information about the dataset, desc
 
 The ``imagesTr``, ``imagesTs`` and ``labelsTr`` contain all training images, testing images and labels. Every image or label file is in the standard  NIFTI format (.nii.gz ending). In our conversions scripts, the sample images will get converted into NIFTI if the original dataset is not in NIFTI. The ``imagesTs`` directory can be empty, if the dataset does not provide any testing images.
 
+***
 ### Transforming Datasets into Medical Decathlon Structure
 
 To retrieve the medicaldecathlon structure of a dataset, run the corresponding `make_dataset.py` script in `src/data` directory. You will need to add the paths of the downloaded files as an argument to generate the structure. For instance, run the following command to generate the radiopaedia dataset in the medicaldecathlon structure.
@@ -57,7 +58,7 @@ python covid19/mosmed/make_dataset.py --image_path "path/to/images" --label_path
 
 This can be downloaded here: https://www.imagenglab.com/newsite/covid-19/. You need to download all of the 81 cases.
 
-For this dataset, you do not need to specify the ``--image_path``option, as the labels can be downloaded together with the CT files.
+For this dataset, you do not need to specify the ``--image_path`` option, as the labels can be downloaded together with the CT files.
 ```
 python covid19/imagenglab/make_dataset.py --image_path "path/to/images"
 ```
